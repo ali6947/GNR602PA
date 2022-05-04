@@ -32,7 +32,7 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
     Return values:
     X_coords, Y_coords, NCC Values  (all as numpy arrays)
     
-    # returns only highest NCC corrs and value when single is true
+    # returns only highest NCC location and value when single is true
     """
 
     try:
