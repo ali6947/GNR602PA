@@ -6,7 +6,7 @@ import pylab as pl
 import sys
 from tqdm import tqdm
 import torch
-# from torchvision.ops import nms
+from torchvision.ops import nms
 
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
