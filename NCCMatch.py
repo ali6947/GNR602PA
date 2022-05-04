@@ -5,7 +5,8 @@ import cv2
 import pylab as pl
 import sys
 from tqdm import tqdm
-
+# import torch
+# from torchvision.ops import nms
 
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
@@ -21,7 +22,19 @@ def Normalised_Cross_Correlation(region_of_interest, target_area):
     return correlation/normalisation
 
 
-def Template_Matcher(img, target,thresh=0.99):
+def Template_Matcher(img, target,thresh=0.99,single=False):
+    """
+    img: Image to search over as a numpy array
+    target: Object to serach as a numpy array
+    thresh: minimum value of NCC for to detect a match, used only when single is False 
+    single: Detect multiple mathces when False or only 1 top match otherwise.
+
+    Return values:
+    X_coords, Y_coords, NCC Values  (all as numpy arrays)
+    
+    # returns only highest NCC corrs and value when single is true
+    """
+
     try:
         height, width,_ = img.shape
     except:
@@ -42,12 +55,16 @@ def Template_Matcher(img, target,thresh=0.99):
             region_of_interest = img[h : h+target_height, w : w+target_width]
             NccValue[h, w] = Normalised_Cross_Correlation(region_of_interest, target)
     # print(np.min(NccValue))
-    best_Y,best_X=np.where(NccValue>thresh)    
     # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
     # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
-    # print(np.sort(NccValue,axis=None))
+    print(np.sort(NccValue,axis=None))
     # print(np.argsort(NccValue,axis=None))
-    return (best_X,best_Y),np.max(NccValue)
+    if single:
+        best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
+        return (best_X,best_Y),NccValue[best_Y,best_X]
+    else: 
+        best_Y,best_X=np.where(NccValue>thresh)    
+        return (best_X,best_Y),NccValue[best_Y,best_X]
 
 
 if __name__ == '__main__':
@@ -87,13 +104,18 @@ if __name__ == '__main__':
     except:
         height, width = template.shape
     
-    matched_coords,maxCorr = Template_Matcher(image, template, threshold)
+    matched_coords,Corrs = Template_Matcher(image, template, threshold,args['single']) # returns only highest NCC corrs and value when single is true
     
     if args['single']:
-        print(f'normalised cross correlation: {maxCorr:.5f}')
-        cv2.rectangle(image, (matched_coords[0][-1],matched_coords[1][-1]), (matched_coords[0][-1] + width, matched_coords[1][-1] + height), 0, 3)
+        print(f'normalised cross correlation: {Corrs:.5f}')
+        cv2.rectangle(image, (matched_coords[0],matched_coords[1]), (matched_coords[0] + width, matched_coords[1] + height), 0, 3)
 
     else:
+        # boxes=torch.tensor([[a,b,a + width, b + height] for a,b in zip(matched_coords[0],matched_coords[1])],dtype=torch.float32)
+        # scores=Corrs
+        # import pdb
+        # pdb.set_trace()
+
         for a,b in zip(matched_coords[0],matched_coords[1]):
             cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
 
