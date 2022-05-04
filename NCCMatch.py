@@ -58,7 +58,7 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
     # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
     # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
     # print(np.argsort(NccValue,axis=None))
-    print(np.sort(NccValue,axis=None))
+    # print(np.sort(NccValue,axis=None))
     if single:
         best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
         return (best_X,best_Y),NccValue[best_Y,best_X]
