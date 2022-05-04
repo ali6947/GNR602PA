@@ -57,7 +57,6 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
     # print(np.min(NccValue))
     # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
     # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
-    print(np.sort(NccValue,axis=None))
     # print(np.argsort(NccValue,axis=None))
     if single:
         best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
@@ -120,7 +119,7 @@ if __name__ == '__main__':
         for idx in box_idx:
             a=matched_coords[0][idx]
             b=matched_coords[1][idx]
-            print(a,b)
+            
             cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
