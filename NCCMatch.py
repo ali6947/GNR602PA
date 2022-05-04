@@ -5,8 +5,8 @@ import cv2
 import pylab as pl
 import sys
 from tqdm import tqdm
-# import torch
-# from torchvision.ops import nms
+import torch
+from torchvision.ops import nms
 
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
@@ -74,11 +74,13 @@ if __name__ == '__main__':
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
     ap.add_argument("-t", "--template", required = True, help = "Path to template")
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
-    ap.add_argument("-thr", "--threshold", help = "convert image to grayscale",default=0.99)
+    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection",default=0.99)
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
     ap.add_argument("-o", "--output", help = "output file location",default="result.png")
+    ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
     args = vars(ap.parse_args())
-    threshold=float(args['threshold'])
+    threshold=float(args['ncc_threshold'])
+    iou_thresh=float(args['iou_threshold'])
 
     if args['grayscale']:
         image = cv2.imread(args["image"], 0)
@@ -111,12 +113,14 @@ if __name__ == '__main__':
         cv2.rectangle(image, (matched_coords[0],matched_coords[1]), (matched_coords[0] + width, matched_coords[1] + height), 0, 3)
 
     else:
-        # boxes=torch.tensor([[a,b,a + width, b + height] for a,b in zip(matched_coords[0],matched_coords[1])],dtype=torch.float32)
-        # scores=Corrs
-        # import pdb
-        # pdb.set_trace()
+        boxes=torch.tensor([[a,b,a + width, b + height] for a,b in zip(matched_coords[0],matched_coords[1])],dtype=torch.float64)
+        scores=torch.tensor(Corrs,dtype=torch.float64)
+        box_idx=nms(boxes,scores,iou_thresh)
 
-        for a,b in zip(matched_coords[0],matched_coords[1]):
+        for idx in box_idx:
+            a=matched_coords[0][idx]
+            b=matched_coords[1][idx]
+            print(a,b)
             cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
