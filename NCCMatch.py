@@ -6,7 +6,7 @@ import pylab as pl
 import sys
 from tqdm import tqdm
 import torch
-from torchvision.ops import nms
+# from torchvision.ops import nms
 
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
@@ -71,34 +71,42 @@ if __name__ == '__main__':
 
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
-    ap.add_argument("-t", "--template", required = True, help = "Path to template")
+    ap.add_argument("-t", "--template", required = True, help = "-g-")
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
-    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection",default=0.95)
+    ap.add_argument("-thr", "--ncc_threshold", help = "",default=0.9)
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
-    ap.add_argument("-o", "--output", help = "output file location",default="result.png")
+    ap.add_argument("-o", "--output", help = "output file location",default="")
     ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
     args = vars(ap.parse_args())
     threshold=float(args['ncc_threshold'])
     iou_thresh=float(args['iou_threshold'])
+    
+    try:
+        if args['grayscale']:
+            image = cv2.imread(args["image"], 0)
+        else:
+            image = cv2.imread(args["image"], cv2.IMREAD_COLOR)
+    except:
+        print("Bad Image file")
+        sys.exit(1)
 
-    if args['grayscale']:
-        image = cv2.imread(args["image"], 0)
-    else:
-        image = cv2.imread(args["image"], cv2.IMREAD_COLOR)
+    try:
+        if args['grayscale']:
+            template = cv2.imread(args["template"], 0)
+        else:
+            template = cv2.imread(args["template"], cv2.IMREAD_COLOR)
 
-    if args['grayscale']:
-        template = cv2.imread(args["template"], 0)
-    else:
-        template = cv2.imread(args["template"], cv2.IMREAD_COLOR)
+    except:
+        print("Bad Template file")
+        sys.exit(1)
 
     if template is None:
-        print("Template file not found")
+        print("Bad Template file")
         sys.exit(1)
 
     if image is None:
-        print("Image file not found")
+        print("Bad Image file")
         sys.exit(1)
-
 
     try:
         height, width,_ = template.shape
@@ -125,5 +133,6 @@ if __name__ == '__main__':
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     pl.imshow(image)
     pl.title("Detected Matches")
-    pl.savefig(args['output'])
+    if args['output'] != '':
+        pl.savefig(args['output'])
     pl.show()
