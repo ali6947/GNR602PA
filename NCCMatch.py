@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
-    ap.add_argument("-t", "--template", required = True, help = "-g-")
+    ap.add_argument("-t", "--template", required = True, help = "Path to input template")
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
     ap.add_argument("-thr", "--ncc_threshold", help = "",default=0.9)
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
