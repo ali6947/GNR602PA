@@ -3,6 +3,9 @@ import argparse
 import numpy as np
 import cv2
 import pylab as pl
+import sys
+from tqdm import tqdm
+
 
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
@@ -18,24 +21,33 @@ def Normalised_Cross_Correlation(region_of_interest, target_area):
     return correlation/normalisation
 
 
-def Template_Matcher(img, target):
-    
-    height, width = img.shape
-    target_height, target_width = target.shape
+def Template_Matcher(img, target,thresh=0.99):
+    try:
+        height, width,_ = img.shape
+    except:
+        height, width = img.shape
+
+    try:
+        target_height, target_width,_ = target.shape
+    except:
+        target_height, target_width = target.shape
       
     img = np.array(img, dtype="int")
     target = np.array(target, dtype="int")
     NccValue = np.zeros((height-target_height, width-target_width))
 
     
-    for h in range(height-target_height):
+    for h in tqdm(range(height-target_height)):
         for w in range(width-target_width):           
             region_of_interest = img[h : h+target_height, w : w+target_width]
             NccValue[h, w] = Normalised_Cross_Correlation(region_of_interest, target)
-
-    
-    best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
-    return (best_X,best_Y),NccValue[best_Y,best_X]
+    # print(np.min(NccValue))
+    best_Y,best_X=np.where(NccValue>thresh)    
+    # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
+    # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
+    # print(np.sort(NccValue,axis=None))
+    # print(np.argsort(NccValue,axis=None))
+    return (best_X,best_Y),np.max(NccValue)
 
 
 if __name__ == '__main__':
@@ -44,18 +56,47 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
     ap.add_argument("-t", "--template", required = True, help = "Path to template")
+    ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
+    ap.add_argument("-thr", "--threshold", help = "convert image to grayscale",default=0.99)
+    ap.add_argument("-s", "--single", help = "single detection",action="store_true")
     args = vars(ap.parse_args())
+    threshold=float(args['threshold'])
 
-    image = cv2.imread(args["image"], 0)
-    template = cv2.imread(args["template"], 0)
+    if args['grayscale']:
+        image = cv2.imread(args["image"], 0)
+    else:
+        image = cv2.imread(args["image"], cv2.IMREAD_COLOR)
 
-    height, width = template.shape
+    if args['grayscale']:
+        template = cv2.imread(args["template"], 0)
+    else:
+        template = cv2.imread(args["template"], cv2.IMREAD_COLOR)
+
+    if template is None:
+        print("Template file not found")
+        sys.exit(1)
+
+    if image is None:
+        print("Image file not found")
+        sys.exit(1)
+
+
+    try:
+        height, width,_ = template.shape
+    except:
+        height, width = template.shape
     
-    matched_coords,norm_cross_corr = Template_Matcher(image, template)
+    matched_coords,maxCorr = Template_Matcher(image, template, threshold)
     
-    print(f'normalised cross correlation: {norm_cross_corr:.5f}')
-    cv2.rectangle(image, matched_coords, (matched_coords[0] + width, matched_coords[1] + height), 0, 3)
+    if args['single']:
+        print(f'normalised cross correlation: {maxCorr:.5f}')
+        cv2.rectangle(image, (matched_coords[0][-1],matched_coords[1][-1]), (matched_coords[0][-1] + width, matched_coords[1][-1] + height), 0, 3)
 
+    else:
+        for a,b in zip(matched_coords[0],matched_coords[1]):
+            cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     pl.imshow(image)
-    pl.title(f'normalised cross correlation: {norm_cross_corr:.5f}')
+    pl.title("Detected Matches")
     pl.show()
