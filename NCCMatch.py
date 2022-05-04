@@ -59,7 +59,7 @@ if __name__ == '__main__':
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
     ap.add_argument("-thr", "--threshold", help = "convert image to grayscale",default=0.99)
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
-    ap.add_argument("-o", "--output", help = "Output file location",default="result.png")
+    ap.add_argument("-o", "--output", help = "output file location",default="result.png")
     args = vars(ap.parse_args())
     threshold=float(args['threshold'])
 
