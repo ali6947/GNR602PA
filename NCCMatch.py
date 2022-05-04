@@ -11,10 +11,10 @@ from torchvision.ops import nms
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
     
-    mean_roi=np.mean(region_of_interest)
-    mean_target=np.mean(target_area)
-    region_of_interest=region_of_interest-mean_roi
-    target_area=target_area - mean_target
+    mean_roi = np.mean(region_of_interest)
+    mean_target = np.mean(target_area)
+    region_of_interest = region_of_interest-mean_roi
+    target_area = target_area - mean_target
 
     correlation = np.sum(region_of_interest * target_area)
     normalisation = np.sqrt( (np.sum(region_of_interest ** 2))) * np.sqrt(np.sum(target_area ** 2))
@@ -50,7 +50,7 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
     NccValue = np.zeros((height-target_height, width-target_width))
 
     
-    for h in tqdm(range(height-target_height)):
+    for h in tqdm(range(height-target_height), desc='Finding Matches: '):
         for w in range(width-target_width):           
             region_of_interest = img[h : h+target_height, w : w+target_width]
             NccValue[h, w] = Normalised_Cross_Correlation(region_of_interest, target)
@@ -58,6 +58,7 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
     # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
     # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
     # print(np.argsort(NccValue,axis=None))
+    print(np.sort(NccValue,axis=None))
     if single:
         best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
         return (best_X,best_Y),NccValue[best_Y,best_X]
@@ -73,10 +74,10 @@ if __name__ == '__main__':
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
     ap.add_argument("-t", "--template", required = True, help = "Path to template")
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
-    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection",default=0.95)
-    ap.add_argument("-s", "--single", help = "single detection",action="store_true")
-    ap.add_argument("-o", "--output", help = "output file location",default="result.png")
-    ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
+    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection", default=0.90)
+    ap.add_argument("-s", "--single", help = "single detection", action="store_true")
+    ap.add_argument("-o", "--output", help = "output file location", default="result.png")
+    ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection", default=0.2)
     args = vars(ap.parse_args())
     threshold=float(args['ncc_threshold'])
     iou_thresh=float(args['iou_threshold'])
@@ -108,14 +109,19 @@ if __name__ == '__main__':
     matched_coords,Corrs = Template_Matcher(image, template, threshold,args['single']) # returns only highest NCC corrs and value when single is true
     
     if args['single']:
-        print(f'normalised cross correlation: {Corrs:.5f}')
+        print(f'Found maxmimum Normalised Cross Correlation: {Corrs:.5f}')
         cv2.rectangle(image, (matched_coords[0],matched_coords[1]), (matched_coords[0] + width, matched_coords[1] + height), 0, 3)
 
     else:
         boxes=torch.tensor([[a,b,a + width, b + height] for a,b in zip(matched_coords[0],matched_coords[1])],dtype=torch.float64)
         scores=torch.tensor(Corrs,dtype=torch.float64)
         box_idx=nms(boxes,scores,iou_thresh)
-
+        if len(box_idx)>0:
+            print(f'\nFound {len(box_idx)} matches with the following Normalised Cross Correlations:')
+            for sc in scores[box_idx]:
+                print(sc.item())
+        else:
+            print("No matches found")
         for idx in box_idx:
             a=matched_coords[0][idx]
             b=matched_coords[1][idx]
