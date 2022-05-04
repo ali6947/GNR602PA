@@ -11,10 +11,10 @@ from torchvision.ops import nms
 
 def Normalised_Cross_Correlation(region_of_interest, target_area):
     
-    # mean_roi=np.mean(region_of_interest)
-    # mean_target=np.mean(target_area)
-    # region_of_interest=region_of_interest-mean_roi
-    # target_area=target_area - mean_target
+    mean_roi=np.mean(region_of_interest)
+    mean_target=np.mean(target_area)
+    region_of_interest=region_of_interest-mean_roi
+    target_area=target_area - mean_target
 
     correlation = np.sum(region_of_interest * target_area)
     normalisation = np.sqrt( (np.sum(region_of_interest ** 2))) * np.sqrt(np.sum(target_area ** 2))
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     ap.add_argument("-i", "--image", required = True, help = "Path to input image")
     ap.add_argument("-t", "--template", required = True, help = "Path to template")
     ap.add_argument("-g", "--grayscale",action="store_true", help = "convert image to grayscale")
-    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection",default=0.99)
+    ap.add_argument("-thr", "--ncc_threshold", help = "NCC Threshold for match detection",default=0.95)
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
     ap.add_argument("-o", "--output", help = "output file location",default="result.png")
     ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
