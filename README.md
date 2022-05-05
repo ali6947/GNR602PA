@@ -14,3 +14,6 @@ Our code written in Python3 has the following command line arguments: <br />
 `-s` OR `--single`: If flag is given, only single max NCC value detection is made, else multiple <br />
 `-o` OR `--output`: Path to output file. If not given, image is not saved <br />
 `-iou` OR `--iou_threshold`: IoU Threshold for match selection" (Default: 0.2) <br />
+
+## Sample Usa Command <br />
+`python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -thr 0.9 -o result.png -iou 0.2`
