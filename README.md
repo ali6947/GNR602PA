@@ -4,6 +4,14 @@
 Run the following commands for installation: <br />
 `pip3 install --upgrade pip` <br />
 `pip3 install opencv-python` <br />
+`pip3 install torchvision` <br />
+`pip install tqdm` <br />
+`pip3 install scipy` <br />
+`pip3 install matplotlib` <br />
+`pip3 install numpy`<br />
+
+
+NOTE: please install compatible torch version
 
 ## Code Usage <br />
 Our code written in Python3 has the following command line arguments: <br />
