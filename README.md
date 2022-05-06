@@ -38,3 +38,9 @@ Please run the above commands to isntall the required packages. Then clone this 
 
 ## Sample Use Command for Colour image <br />
 `python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png -thr 0.9 -o result.png -iou 0.2`
+
+## Sample Use Command for Grayscale image with added Gaussian noise (mean=100, std=100) <br />
+`python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -g -thr 0.5 -ni -meani 100 -stdi 100`
+
+## Sample Use Command for Colour image with added Gaussian noise (mean=100, std=100) <br />
+`python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png  -thr 0.7 -ni -meani 100 -stdi 100`
