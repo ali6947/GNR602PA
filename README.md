@@ -5,7 +5,7 @@ Run the following commands for installation: <br />
 `pip3 install --upgrade pip` <br />
 `pip3 install opencv-python` <br />
 `pip3 install torchvision` <br />
-`pip install tqdm` <br />
+`pip3 install tqdm` <br />
 `pip3 install scipy` <br />
 `pip3 install matplotlib` <br />
 `pip3 install numpy`<br />
