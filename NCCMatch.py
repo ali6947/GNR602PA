@@ -54,11 +54,7 @@ def Template_Matcher(img, target,thresh=0.99,single=False):
         for w in range(width-target_width):           
             region_of_interest = img[h : h+target_height, w : w+target_width]
             NccValue[h, w] = Normalised_Cross_Correlation(region_of_interest, target)
-    # print(np.min(NccValue))
-    # print(np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape),best_Y,best_X)
-    # best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
-    # print(np.argsort(NccValue,axis=None))
-    # print(np.sort(NccValue,axis=None))
+    
     if single:
         best_Y,best_X=np.unravel_index(np.argmax(NccValue, axis=None), NccValue.shape)
         return (best_X,best_Y),NccValue[best_Y,best_X]
@@ -78,6 +74,12 @@ if __name__ == '__main__':
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
     ap.add_argument("-o", "--output", help = "output file location",default="")
     ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
+    ap.add_argument("-ni", "--noisy_image",action="store_true", help = "Add aditive Gaussian noise to image")
+    ap.add_argument("-nt", "--noisy_template",action="store_true", help = "Add additive Gaussian noise to template")
+    ap.add_argument("-stdi", "--std_image", help = "Standard Deviation for the noise to be added to the image",default=0.5)
+    ap.add_argument("-stdt", "--std_template", help = "Standard Deviation for the noise to be added to the template",default=0.5)
+    ap.add_argument("-meani", "--mean_image", help = "Mean for the noise to be added to the image",default=0)
+    ap.add_argument("-meant", "--mean_template", help = "Mean for the noise to be added to the template",default=0)
 
     args = vars(ap.parse_args())
     threshold=float(args['ncc_threshold'])
@@ -110,6 +112,12 @@ if __name__ == '__main__':
         print("Bad Image file")
         sys.exit(1)
 
+    if args['noisy_image']:
+        image=image+np.float32(np.random.normal(scale=float(args['std_image']),size=image.shape))
+
+    if args['noisy_template']:
+        template=template+np.float32(np.random.normal(scale=float(args['std_template']),size=template.shape))
+
     try:
         height, width,_ = template.shape
     except:
@@ -137,7 +145,9 @@ if __name__ == '__main__':
             
             cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
 
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.cvtColor(np.clip(np.round(image),0,255), cv2.COLOR_BGR2RGB)
+    image=image.astype(np.uint8)
+
     pl.imshow(image)
     pl.title("Detected Matches")
     if args['output'] != '':
