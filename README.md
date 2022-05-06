@@ -31,7 +31,7 @@ Our code written in Python3 has the following command line arguments: <br />
 `-meant` OR `--mean_template`: Mean for the noise to be added to the template (Default: 0) <br />
 
 ## Running Instructions
-Please run the above commands to isntall the required packages. Then clone this repo and run the below commands inside the folder for the output. <br />
+Please run the above commands to isntall the required packages. Then run the below commands inside the folder for the output. <br />
 
 A windows executable called `NCCMatch_win` is also provided. It can be run from the Windows Command Prompt using the commands below after placing the executable beside the Images folder.
 
