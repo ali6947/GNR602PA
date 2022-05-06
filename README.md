@@ -9,6 +9,7 @@ Run the following commands for installation: <br />
 `pip3 install scipy` <br />
 `pip3 install matplotlib` <br />
 `pip3 install numpy`<br />
+`pip install argparse` <br />
 
 
 NOTE: please install compatible torch version
@@ -29,6 +30,8 @@ Our code written in Python3 has the following command line arguments: <br />
 `-meani` OR `--mean_image`: Mean for the noise to be added to the image (Default: 0) <br />
 `-meant` OR `--mean_template`: Mean for the noise to be added to the template (Default: 0) <br />
 
+## Running Instructions
+Please run the above commands to isntall the required packages. Then clone this repo and run the below commands inside the folder for the output.  
 
 ## Sample Use Command for Grayscale image <br />
 `python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -thr 0.9 -o -g result.png -iou 0.2`
