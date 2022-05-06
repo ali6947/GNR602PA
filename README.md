@@ -1,4 +1,4 @@
-# GNR602 PA1 - Normalised Cross Correlation based Template Matching
+# GNR602 PA - Normalised Cross Correlation based Template Matching
 
 ## Requirements
 Run the following commands for installation: <br />
