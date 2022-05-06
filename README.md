@@ -36,17 +36,17 @@ Please run the above commands to isntall the required packages. Then clone this 
 A windows executable called `NCCMatch_win` is also provided. It can be run from the Windows Command Prompt using the commands below after placing the executable beside the Images folder.
 
 ## Sample Use Command for Grayscale image <br />
-Script: `python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -thr 0.9 -o -g result.png -iou 0.2`
+Script: `python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -thr 0.9 -o -g result.png -iou 0.2` <br />
 Windows Executable: `NCCMatch_win.exe -i Images/brain.jpg -t Images/brain_target.jpg -thr 0.9 -o -g result.png -iou 0.2`
 
 ## Sample Use Command for Colour image <br />
-Script: `python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png -thr 0.9 -o result.png -iou 0.2`
+Script: `python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png -thr 0.9 -o result.png -iou 0.2` <br />
 Windows Executable: `NCCMatch_win.exe -i Images/icons.png -t Images/icons_target.png -thr 0.9 -o result.png -iou 0.2`
 
 ## Sample Use Command for Grayscale image with added Gaussian noise (mean=100, std=100) <br />
-Script: `python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -g -thr 0.5 -ni -meani 100 -stdi 100`
+Script: `python3 NCCMatch.py -i Images/brain.jpg -t Images/brain_target.jpg -g -thr 0.5 -ni -meani 100 -stdi 100` <br />
 Windows Executable: `NCCMatch_win.exe -i Images/brain.jpg -t Images/brain_target.jpg -g -thr 0.5 -ni -meani 100 -stdi 100`
 
 ## Sample Use Command for Colour image with added Gaussian noise (mean=100, std=100) <br />
-Script: `python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png  -thr 0.7 -ni -meani 100 -stdi 100`
+Script: `python3 NCCMatch.py -i Images/icons.png -t Images/icons_target.png  -thr 0.7 -ni -meani 100 -stdi 100` <br />
 Windows Executable: `NCCMatch_win.exe -i Images/icons.png -t Images/icons_target.png  -thr 0.7 -ni -meani 100 -stdi 100`
