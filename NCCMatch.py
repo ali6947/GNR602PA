@@ -74,7 +74,7 @@ if __name__ == '__main__':
     ap.add_argument("-s", "--single", help = "single detection",action="store_true")
     ap.add_argument("-o", "--output", help = "output file location",default="")
     ap.add_argument("-iou", "--iou_threshold", help = "IoU Threshold for match selection",default=0.2)
-    ap.add_argument("-ni", "--noisy_image",action="store_true", help = "Add aditive Gaussian noise to image")
+    ap.add_argument("-ni", "--noisy_image",action="store_true", help = "Add additive Gaussian noise to image")
     ap.add_argument("-nt", "--noisy_template",action="store_true", help = "Add additive Gaussian noise to template")
     ap.add_argument("-stdi", "--std_image", help = "Standard Deviation for the noise to be added to the image",default=0.5)
     ap.add_argument("-stdt", "--std_template", help = "Standard Deviation for the noise to be added to the template",default=0.5)
