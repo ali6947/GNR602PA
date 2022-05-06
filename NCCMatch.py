@@ -129,7 +129,8 @@ if __name__ == '__main__':
         print(f'Found maxmimum Normalised Cross Correlation: {Corrs:.5f}')
         cv2.rectangle(image, (matched_coords[0],matched_coords[1]), (matched_coords[0] + width, matched_coords[1] + height), 0, 3)
 
-    else:
+    elif matched_coords[0].size!=0:
+
         boxes=torch.tensor([[a,b,a + width, b + height] for a,b in zip(matched_coords[0],matched_coords[1])],dtype=torch.float64)
         scores=torch.tensor(Corrs,dtype=torch.float64)
         box_idx=nms(boxes,scores,iou_thresh)
@@ -144,6 +145,9 @@ if __name__ == '__main__':
             b=matched_coords[1][idx]
             
             cv2.rectangle(image, (a,b), (a + width, b + height), 0, 3)
+
+    else:
+        print("No matches found")
 
     image = cv2.cvtColor(np.clip(np.round(image),0,255), cv2.COLOR_BGR2RGB)
     image=image.astype(np.uint8)
