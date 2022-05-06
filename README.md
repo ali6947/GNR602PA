@@ -14,12 +14,12 @@ Our code written in Python3 has the following command line arguments: <br />
 `-s` OR `--single`: If flag is given, only single max NCC value detection is made, else multiple <br />
 `-o` OR `--output`: Path to output file. If not given, image is not saved <br />
 `-iou` OR `--iou_threshold`: IoU Threshold for match selection" (Default: 0.2) <br />
-`-ni` OR `--noisy_image`: If provided, add additive Gaussian noise to image'
-`-nt` OR `--noisy_template`: If provided, add additive Gaussian noise to template
-`-stdi` OR `--std_image`: Standard Deviation for the noise to be added to the image (Default: 0.5)
-`-stdt` OR `--std_template`: Standard Deviation for the noise to be added to the template (Default: 0.5)
-`-meani` OR `--mean_image`: Mean for the noise to be added to the image (Default: 0)
-`-meant` OR `--mean_template`: Mean for the noise to be added to the template (Default: 0)
+`-ni` OR `--noisy_image`: If provided, add additive Gaussian noise to image  <br />
+`-nt` OR `--noisy_template`: If provided, add additive Gaussian noise to template <br />
+`-stdi` OR `--std_image`: Standard Deviation for the noise to be added to the image (Default: 0.5) <br />
+`-stdt` OR `--std_template`: Standard Deviation for the noise to be added to the template (Default: 0.5) <br />
+`-meani` OR `--mean_image`: Mean for the noise to be added to the image (Default: 0) <br />
+`-meant` OR `--mean_template`: Mean for the noise to be added to the template (Default: 0) <br />
 
 
 ## Sample Use Command for Grayscale image <br />
