@@ -9,10 +9,10 @@ Run the following commands for installation: <br />
 `pip3 install scipy` <br />
 `pip3 install matplotlib` <br />
 `pip3 install numpy`<br />
-`pip install argparse` <br />
+`pip3 install argparse` <br />
 
 
-NOTE: please install compatible torch version
+NOTE: Please install compatible torch version. U.se pip instead of pip3 if that is the default for your system
 
 ## Code Usage <br />
 Our code written in Python3 has the following command line arguments: <br />
